@@ -1,5 +1,8 @@
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 import prisma from '../../lib/prisma'; // Assure-toi que le client Prisma est configuré
+
+const SECRET_KEY = 'votre_cle_secrete'; // Remplace par une clé secrète sécurisée dans un fichier .env
 
 export default async function handler(req, res) {
   if (req.method === 'POST') {
@@ -26,7 +29,14 @@ export default async function handler(req, res) {
         return res.status(401).json({ error: 'Mot de passe incorrect.' });
       }
 
-      res.status(200).json({ message: 'Connexion réussie.', user });
+      // Génère un token JWT
+      const token = jwt.sign(
+        { id: user.id, email: user.email },
+        SECRET_KEY,
+        { expiresIn: '1h' } // Durée de validité du token
+      );
+
+      res.status(200).json({ token });
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: 'Erreur serveur.' });

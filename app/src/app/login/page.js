@@ -1,15 +1,17 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const router = useRouter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(''); // Réinitialise les erreurs
+    setError('');
 
     try {
       const res = await fetch('/api/login', {
@@ -26,9 +28,11 @@ export default function LoginPage() {
         throw new Error(data.error || 'Une erreur est survenue.');
       }
 
-      alert('Connexion réussie !');
-      // Redirection après connexion réussie
-      window.location.href = '/dashboard';
+      // Stocke le token dans le localStorage
+      localStorage.setItem('token', data.token);
+
+      // Redirige vers le Dashboard
+      router.push('/dashboard');
     } catch (err) {
       setError(err.message);
     }
