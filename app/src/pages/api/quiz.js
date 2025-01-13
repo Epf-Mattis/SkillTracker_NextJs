@@ -1,52 +1,41 @@
 import prisma from '../../lib/prisma';
 
 export default async function handler(req, res) {
-  if (req.method === 'GET') {
-    try {
-      // Simule des questions de quiz (à stocker éventuellement dans la DB)
-      const questions = [
-        {
-          id: 1,
-          question: 'Qu’est-ce que React ?',
-          options: ['Framework', 'Bibliothèque', 'Langage', 'Navigateur'],
-          answer: 'Bibliothèque',
-        },
-        {
-          id: 2,
-          question: 'Qu’est-ce que Prisma ?',
-          options: ['ORM', 'Langage', 'Base de données', 'Serveur'],
-          answer: 'ORM',
-        },
-      ];
-      res.status(200).json({ questions });
-    } catch (error) {
-      console.error('Erreur lors de la récupération des questions de quiz :', error);
-      res.status(500).json({ message: 'Erreur serveur.' });
-    }
-  } else if (req.method === 'POST') {
-    const { userId, score, total } = req.body;
+  if (req.method === 'POST') {
+    const { question, options, answer, userId } = req.body;
 
-    if (!userId || score == null || total == null) {
-      return res.status(400).json({ message: 'UserId, score et total sont requis.' });
+    // Validation des champs
+    if (!question || !Array.isArray(options) || options.length !== 4 || !answer || !userId) {
+      return res.status(400).json({ message: 'Tous les champs sont requis.' });
     }
 
     try {
-      const quizResult = await prisma.quizResult.create({
+      // Création d'un nouveau quiz
+      const quiz = await prisma.quiz.create({
         data: {
-          score,
-          total,
-          user: {
-            connect: { id: userId },
-          },
+          question,
+          options, // Prisma gère automatiquement les données JSON
+          answer,
+          userId,
         },
       });
-      res.status(201).json({ quizResult });
+
+      res.status(201).json({ quiz });
     } catch (error) {
-      console.error('Erreur lors de l’ajout des résultats de quiz :', error);
+      console.error('Erreur lors de la création du quiz :', error);
+      res.status(500).json({ message: 'Erreur serveur.' });
+    }
+  } else if (req.method === 'GET') {
+    try {
+      // Récupération de tous les quiz
+      const quizzes = await prisma.quiz.findMany();
+      res.status(200).json({ quizzes });
+    } catch (error) {
+      console.error('Erreur lors de la récupération des quiz :', error);
       res.status(500).json({ message: 'Erreur serveur.' });
     }
   } else {
-    res.setHeader('Allow', ['GET', 'POST']);
-    res.status(405).json({ message: `Méthode ${req.method} non autorisée` });
+    res.setHeader('Allow', ['POST', 'GET']);
+    res.status(405).end(`Méthode ${req.method} non autorisée.`);
   }
 }

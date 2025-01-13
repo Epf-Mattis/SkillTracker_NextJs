@@ -20,7 +20,7 @@ model User {
   name      String
   skills    Skill[]
   goals     Goal[]
-  quizzes   QuizResult[]
+  quizzes   Quiz[] // Remplacez QuizResult[] par Quiz[]
 }
 
 model Skill {
@@ -41,14 +41,16 @@ model Goal {
   user        User      @relation(fields: [userId], references: [id])
 }
 
-model QuizResult {
-  id          Int       @id @default(autoincrement())
-  score       Float
-  total       Int
-  completedAt DateTime  @default(now())
-  userId      Int
-  user        User       @relation(fields: [userId], references: [id])
+model Quiz {
+  id        Int      @id @default(autoincrement())
+  question  String
+  options   Json     // Stocke les options comme un tableau JSON
+  answer    String
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
 }
+
+
 
 enum SkillLevel {
   BEGINNER
