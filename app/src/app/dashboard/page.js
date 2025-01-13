@@ -1,14 +1,27 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { jwtDecode } from 'jwt-decode';
 import Skills from '@/app/components/Skills/Skills';
 import Goals from '@/app/components/Goals/Goals';
 import Quiz from '@/app/components/Quiz/Quiz';
 import PlayQuiz from '@/app/components/Quiz/PlayQuiz';
 
-
 export default function DashboardPage() {
   const [activeSection, setActiveSection] = useState('skills');
+  const [user, setUser] = useState({ name: '', email: '' }); 
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      try {
+        const decoded = jwtDecode(token);
+        setUser({ name: decoded.name || 'name', email: decoded.email || '' });
+      } catch (error) {
+        console.error('Erreur lors du décodage du token :', error);
+      }
+    }
+  }, []);
 
   return (
     <div style={styles.container}>
@@ -16,8 +29,8 @@ export default function DashboardPage() {
       <aside style={styles.sidebar}>
         <div style={styles.profile}>
           <div style={styles.avatar}></div>
-          <p>Name</p>
-          <p>Mail</p>
+          <p>{user.name}</p>
+          <p>{user.email}</p>
         </div>
         <nav style={styles.nav}>
           <button style={styles.navButton} onClick={() => setActiveSection('skills')}>
@@ -30,9 +43,8 @@ export default function DashboardPage() {
             Quiz
           </button>
           <button style={styles.navButton} onClick={() => setActiveSection('playQuiz')}>
-  Jouer Quiz
-</button>
-
+            Jouer Quiz
+          </button>
         </nav>
       </aside>
 
@@ -42,7 +54,6 @@ export default function DashboardPage() {
         {activeSection === 'goals' && <Goals />}
         {activeSection === 'quiz' && <Quiz />}
         {activeSection === 'playQuiz' && <PlayQuiz />}
-
       </main>
     </div>
   );
