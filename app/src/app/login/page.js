@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import './styles.css'; // Assurez-vous que le CSS fourni est dans ce fichier.
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -39,29 +40,54 @@ export default function LoginPage() {
   };
 
   return (
-    <div>
-      <h1>Connexion</h1>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Email :</label>
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+      <form className="form" onSubmit={handleSubmit}>
+        <div className="form-title">
+          <span>Sign in to your</span>
+        </div>
+        <div className="title-2">
+          <span>SPACE</span>
+        </div>
+
+        <div className="input-container">
           <input
+            className="input-mail"
             type="email"
+            placeholder="Enter email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
         </div>
-        <div>
-          <label>Mot de passe :</label>
+
+        <div className="input-container">
           <input
+            className="input-pwd"
             type="password"
+            placeholder="Enter password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
         </div>
-        <button type="submit">Se connecter</button>
+
+        {error && <p style={{ color: 'red', textAlign: 'center' }}>{error}</p>}
+
+        <button type="submit" className="submit">
+          <span className="sign-text">Sign in</span>
+        </button>
+
+        <p className="signup-link">
+          No account?{' '}
+          <a href="/signup" className="up">Sign up!</a>
+        </p>
+
+        <section className="bg-stars">
+          <span className="star"></span>
+          <span className="star"></span>
+          <span className="star"></span>
+          <span className="star"></span>
+        </section>
       </form>
     </div>
   );
