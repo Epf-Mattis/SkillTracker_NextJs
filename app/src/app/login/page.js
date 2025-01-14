@@ -79,7 +79,7 @@ export default function LoginPage() {
 
         <p className="signup-link">
           No account?{' '}
-          <a href="/signup" className="up">Sign up!</a>
+          <a href="/register"  className="up">Sign up!</a>
         </p>
 
         <section className="bg-stars">

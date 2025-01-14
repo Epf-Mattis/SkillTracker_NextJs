@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import './styles.css'; // Assurez-vous que le CSS fourni est dans ce fichier.
 
 export default function RegisterPage() {
   const [name, setName] = useState('');
@@ -11,12 +12,10 @@ export default function RegisterPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('handleSubmit déclenché'); // Vérifie si la fonction est bien appelée
     setError('');
     setSuccess('');
 
     try {
-      console.log('Données envoyées :', { name, email, password }); // Log des données à envoyer
       const res = await fetch('/api/register', {
         method: 'POST',
         headers: {
@@ -25,58 +24,82 @@ export default function RegisterPage() {
         body: JSON.stringify({ name, email, password }),
       });
 
-      console.log('Réponse reçue :', res); // Log de la réponse
       if (!res.ok) {
         const data = await res.json();
         throw new Error(data.error || 'Une erreur est survenue.');
       }
 
       const data = await res.json();
-      console.log('Données du serveur :', data); // Log des données de l'API
       setSuccess('Inscription réussie ! Vous pouvez maintenant vous connecter.');
       setName('');
       setEmail('');
       setPassword('');
     } catch (err) {
-      console.error('Erreur :', err.message); // Log des erreurs
       setError(err.message);
     }
   };
 
   return (
-    <div>
-      <h1>Inscription</h1>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      {success && <p style={{ color: 'green' }}>{success}</p>}
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Nom :</label>
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+      <form className="form" onSubmit={handleSubmit}>
+        <div className="form-title">
+          <span>Register for your</span>
+        </div>
+        <div className="title-2">
+          <span>SPACE</span>
+        </div>
+
+        <div className="input-container">
           <input
+            className="input-name"
             type="text"
+            placeholder="Enter name"
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
           />
         </div>
-        <div>
-          <label>Email :</label>
+
+        <div className="input-container">
           <input
+            className="input-mail"
             type="email"
+            placeholder="Enter email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
         </div>
-        <div>
-          <label>Mot de passe :</label>
+
+        <div className="input-container">
           <input
+            className="input-pwd"
             type="password"
+            placeholder="Enter password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
         </div>
-        <button type="submit">S'inscrire</button>
+
+        {error && <p style={{ color: 'red', textAlign: 'center' }}>{error}</p>}
+        {success && <p style={{ color: 'green', textAlign: 'center' }}>{success}</p>}
+
+        <button type="submit" className="submit">
+          <span className="sign-text">Register</span>
+        </button>
+
+        <p className="signup-link">
+          Already have an account?{' '}
+          <a href="/login" className="up">Sign in!</a>
+        </p>
+
+        <section className="bg-stars">
+          <span className="star"></span>
+          <span className="star"></span>
+          <span className="star"></span>
+          <span className="star"></span>
+        </section>
       </form>
     </div>
   );
