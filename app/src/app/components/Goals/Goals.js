@@ -41,6 +41,12 @@ export default function Goal() {
     }
   };
 
+  const formatDate = (dateString) => {
+    if (!dateString) return 'Date non disponible';
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString  ('fr-FR', options);
+  };
+
   return (
     <div style={styles.container}>
       <h2 style={styles.heading}>Objectifs</h2>
@@ -65,7 +71,7 @@ export default function Goal() {
       <ul style={styles.goalList}>
         {goals.map((goal, index) => (
           <li key={index} style={styles.goalItem}>
-            <strong>{goal.description}</strong> - {goal.deadline}
+            <strong>{goal.description}</strong> - {formatDate(goal.deadline)}
           </li>
         ))}
       </ul>

@@ -40,10 +40,10 @@ export default function DashboardPage() {
             Goals
           </button>
           <button style={styles.navButton} onClick={() => setActiveSection('quiz')}>
-            Quiz
+            Create Quiz
           </button>
           <button style={styles.navButton} onClick={() => setActiveSection('playQuiz')}>
-            Jouer Quiz
+            Play Quiz
           </button>
         </nav>
       </aside>
