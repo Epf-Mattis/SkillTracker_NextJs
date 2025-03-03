@@ -44,8 +44,9 @@ model Goal {
 model Quiz {
   id        Int      @id @default(autoincrement())
   question  String
-  options   Json     // Stocke les options comme un tableau JSON
+  options   Json
   answer    String
+  theme     String   // Ex: "React", "PHP", "JavaScript", etc.
   userId    Int
   user      User     @relation(fields: [userId], references: [id])
 }
